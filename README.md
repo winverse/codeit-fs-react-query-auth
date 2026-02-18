@@ -36,6 +36,27 @@ DB 생성(기본 DB 이름: `react-auth`):
 psql -U postgres -d postgres -c 'CREATE DATABASE "react-auth";'
 ```
 
+- Windows (`SQL Shell (psql)`)
+
+1. 시작 메뉴에서 `psql`을 검색해 `SQL Shell (psql)`을 실행합니다.
+2. 프롬프트가 나오면 아래처럼 입력합니다.
+
+```text
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+```
+
+`Server`, `Database`, `Port`, `Username`은 기본값이면 `Enter`만 눌러도 됩니다.
+로그인 후 아래 SQL을 실행합니다.
+
+```sql
+CREATE DATABASE "react-auth";
+\q
+```
+
 `DATABASE_URL` 예시:
 
 ```env
