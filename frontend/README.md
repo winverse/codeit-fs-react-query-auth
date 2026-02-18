@@ -1,6 +1,12 @@
 # React Query Auth Frontend
 
-App Router 기반 Next.js 16 프로젝트입니다.
+Next.js 16(App Router) + React Query 기반 인증 프론트엔드입니다.
+
+## 사전 요구 사항
+
+- Node.js `>= 22`
+- `pnpm`
+- 백엔드 서버 실행 중 (`http://localhost:5001`)
 
 ## 실행 방법
 
@@ -16,21 +22,40 @@ pnpm install
 cp .env.example .env.development
 ```
 
-3. 개발 서버 실행
+3. `NEXT_PUBLIC_BACKEND_BASE_URL` 확인
+
+```env
+NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:5001
+```
+
+- `/api` 경로는 프론트 요청 유틸에서 자동으로 붙습니다.
+
+4. 개발 서버 실행
 
 ```bash
 pnpm dev
 ```
 
-기본 URL: `http://localhost:3000`
+- 기본 URL: `http://localhost:3000`
 
 ## 백엔드 연결
 
-- 백엔드 기본 URL: `http://localhost:5001` (`/api`는 내부에서 자동으로 붙음)
-- 브라우저에서 백엔드를 직접 호출하므로 백엔드에서 CORS(`origin`, `credentials`)를 설정해야 합니다.
+- 브라우저에서 백엔드를 직접 호출합니다.
+- 백엔드에서 CORS(`origin`, `credentials`) 설정이 필요합니다.
 
 ## 주요 기능
 
-- React Query `useMutation`: 회원가입/로그인 요청
-- React Query `useQuery`: 사용자 목록 조회
-- 회원가입 성공 후 사용자 목록 재조회(invalidate)로 생성 여부 확인
+- `useQuery`로 `auth/me`, 사용자 목록, 백엔드 헬스 상태 조회
+- `useMutation`으로 회원가입/로그인/로그아웃 처리
+- `setQueryData` + `invalidateQueries` 조합으로 캐시 동기화
+- 라우트 에러 경계(`src/app/error.js`) + 공통 에러 UI(`AppError`)
+
+## 주요 스크립트
+
+```bash
+pnpm dev     # 개발 서버
+pnpm build   # 프로덕션 빌드
+pnpm start   # 프로덕션 실행
+pnpm lint    # ESLint
+pnpm format  # Prettier 포맷
+```

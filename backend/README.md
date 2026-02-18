@@ -1,107 +1,64 @@
-# Prisma Blog - Schema Models
+# React Query Auth Backend
 
-2-2. Prisma 스키마: 모델과 관계 정의하기 강의의 결과물입니다.
+Express + Prisma 기반 인증 API 서버입니다.
 
-## 프로젝트 구조
+## 사전 요구 사항
 
-```
-prisma-blog/
-├── prisma/
-│   ├── schema.prisma       # User와 Post 모델 정의
-│   └── migrations/         # 마이그레이션 파일 (실행 후 생성)
-├── env/
-│   ├── .env.example
-│   ├── .env.development
-│   └── .env.production
-├── src/
-│   ├── config/
-│   │   └── config.js
-│   ├── db/
-│   │   └── prisma.js
-│   └── server.js
-├── generated/
-│   └── prisma/             # 생성된 Prisma Client (실행 후 생성)
-├── prisma.config.js
-├── jsconfig.json
-├── .prettierrc
-├── eslint.config.js
-├── .gitignore
-└── package.json
-```
+- Node.js `>= 22`
+- `pnpm`
+- PostgreSQL
 
-## 설치 및 실행
+## 빠른 시작
 
 ```bash
-# 1. 의존성 설치
-npm install
-
-# 2. 환경 변수 설정
+pnpm install
 cp env/.env.example env/.env.development
-# env/.env.development 파일을 열어 DATABASE_URL 수정
-
-# 3. Prisma Client 생성
-npm run prisma:generate
-
-# 4. 마이그레이션 실행
-npm run prisma:migrate
-# 마이그레이션 이름 입력: init
-
-# 5. 개발 서버 실행
-npm run dev
-
-# 6. (선택) Prisma Studio로 데이터베이스 확인
-npm run prisma:studio
 ```
 
-## 주요 변경사항 (01-setup → 02-schema-models)
+`env/.env.development`에서 다음 값을 설정합니다.
 
-### 1. schema.prisma에 모델 추가
+- `DATABASE_URL`
+- `JWT_ACCESS_SECRET`
+- `JWT_REFRESH_SECRET`
+- `CORS_ORIGIN` (기본: `http://localhost:3000`)
 
-**User 모델:**
+DB 생성(기본 DB 이름: `react-auth`):
 
-- `id`: Primary Key (자동 증가)
-- `email`: 중복 불가
-- `name`: 선택적 필드
-- `posts`: Post 모델과의 관계 (1:N)
-- `createdAt`, `updatedAt`: 자동 타임스탬프
-
-**Post 모델:**
-
-- `id`: Primary Key (자동 증가)
-- `title`: 게시글 제목
-- `content`: 게시글 내용 (선택적)
-- `published`: 공개 여부 (기본값: false)
-- `author`, `authorId`: User 모델과의 관계
-- `createdAt`, `updatedAt`: 자동 타임스탬프
-
-### 2. 관계 설정 (1:N)
-
-```prisma
-// User: 한 명의 사용자가 여러 게시글 작성
-model User {
-  posts Post[]  // Post 배열
-}
-
-// Post: 각 게시글은 한 명의 작성자
-model Post {
-  author   User @relation(fields: [authorId], references: [id])
-  authorId Int
-}
-```
-
-## 마이그레이션
-
-마이그레이션 실행 시 다음이 생성됩니다:
-
-- `prisma/migrations/` 폴더
-- `20YYMMDDHHMMSS_init/` 마이그레이션 폴더
-- SQL 파일 (CREATE TABLE 명령어)
-
-## 주요 명령어
+- macOS/Linux (zsh, bash)
 
 ```bash
-npm run prisma:generate  # Prisma Client 생성
-npm run prisma:migrate   # 마이그레이션 생성 및 적용
-npm run prisma:studio    # Prisma Studio 실행
-npm run dev              # 개발 서버 실행
+psql -U postgres -d postgres -c 'CREATE DATABASE "react-auth";'
+```
+
+`DATABASE_URL` 예시:
+
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/react-auth"
+```
+
+초기 DB 준비:
+
+```bash
+pnpm run prisma:generate
+pnpm run prisma:migrate
+```
+
+개발 서버 실행:
+
+```bash
+pnpm run dev
+```
+
+- 기본 주소: `http://localhost:5001`
+
+## 주요 스크립트
+
+```bash
+pnpm run dev             # 개발 서버 실행 (.env.development)
+pnpm run prisma:generate # Prisma Client 생성
+pnpm run prisma:migrate  # 개발 마이그레이션
+pnpm run prisma:studio   # Prisma Studio 실행
+pnpm run seed            # 시드 데이터 입력
+pnpm run lint            # ESLint
+pnpm run format          # Prettier 포맷
 ```
