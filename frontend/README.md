@@ -13,7 +13,7 @@ pnpm install
 2. 환경 변수 파일 생성
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env.development
 ```
 
 3. 개발 서버 실행
